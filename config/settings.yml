@@ -1,0 +1,10 @@
+plugins:
+  discourse_vimeo_upload_enabled:
+    default: true
+    client: true
+  discourse_vimeo_api_client_id:
+    default: api_client_id
+  discourse_vimeo_api_client_key:
+    default: api_client_key
+  discourse_vimeo_api_access_token:
+    default: api_access_token
