@@ -2,12 +2,12 @@ plugins:
   discourse_vimeo_upload_enabled:
     default: true
     client: true
-  vimeo_api_client_id:
-    default: api_client_id
-    client: true
-  vimeo_api_client_key:
-    default: api_client_key
-    client: true
   vimeo_api_access_token:
     default: api_access_token
+    client: true
+  vimeo_default_view_privacy:
+    default: anybody
+    client: true
+  vimeo_default_embed_privacy:
+    default: public
     client: true

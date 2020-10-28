@@ -25,6 +25,8 @@ export default {
                 name: file[0].name,
                 file: file[0],
                 token: this.siteSettings.vimeo_api_access_token,
+                view: this.siteSettings.vimeo_default_view_privacy,
+                embed: this.siteSettings.vimeo_default_embed_privacy,
                 upgrade_to_1080: true,
                 onError: function(data) {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')

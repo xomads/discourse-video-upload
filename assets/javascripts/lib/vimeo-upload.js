@@ -161,7 +161,10 @@
         this.videoData = {
             name: (opts.name > '') ? opts.name : defaults.name,
             description: (opts.description > '') ? opts.description : defaults.description,
-            privacy: { view: opts.private ? 'nobody' : 'anybody' }
+            privacy: {
+                view: opts.view ? opts.view : ( opts.private ? 'nobody' : 'anybody' ),
+                embed: opts.embed ? opts.embed : 'public'
+            },
         }
 
         if (!(this.url = opts.url)) {
