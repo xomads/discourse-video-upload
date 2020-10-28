@@ -45,7 +45,6 @@ export default {
                     const interval = setInterval(function () {
                         uploadInst.transcodeStatus(function (status) {
                             if (status === 'in_progress') return ;
-                            console.log(status);
                             clearInterval(interval);
                             component.set('isProcessing', false);
                             if (status === 'error') component.set('processingError', true);
