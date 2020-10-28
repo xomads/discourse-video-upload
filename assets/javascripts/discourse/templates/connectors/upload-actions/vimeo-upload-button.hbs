@@ -1,1 +1,10 @@
-{{d-button action=(action "vimeoUpload") class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
+{{d-button action="vimeoUpload" class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
+{{#if isUploading}}
+    Uploading {{uploadProgress}}%
+{{/if}}
+{{#if isProcessing}}
+    Transcoding video...
+{{/if}}
+{{#if processingError}}
+    Error transcoding video.
+{{/if}}

@@ -1,18 +1,27 @@
+import { getOwner } from "discourse-common/lib/get-owner";
+
+const validExtensions = ["video/mp4", "video/mov", "video/wmv", "video/avi", "video/flv"];
+
 export default {
+    setupComponent(a, component) {
+        component.setProperties({
+            uploadProgress: 0,
+            isUploading: false,
+            isProcessing: false
+        });
+    },
     actions: {
         vimeoUpload() {
+            const composer = getOwner(this).lookup("controller:composer");
             const file = $("#filename-input").prop('files');
-            console.log(file[0]);
             if (!file || file.length < 1) return;
+            if (!validExtensions.includes(file[0].type)) alert("Invalid video, supported types are mp4, mov, wmv, avi, flv");
 
-            const updateProgress = function(progress) {
-                progress = Math.floor(progress * 100)
-                const element = document.getElementById('progress')
-                element.setAttribute('style', 'width:' + progress + '%')
-                element.innerHTML = '&nbsp;' + progress + '%'
-            };
+            const component = this;
+            component.set('isUploading', true);
+            let uploadUrl = '';
 
-            (new VimeoUpload({
+            const uploadInst = new VimeoUpload({
                 name: file[0].name,
                 file: file[0],
                 token: this.siteSettings.vimeo_api_access_token,
@@ -21,25 +30,33 @@ export default {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')
                 },
                 onProgress: function(data) {
-                    // updateProgress(data.loaded / data.total)
-                    console.log(data.loaded / data.total * 100)
+                    const progress = Math.floor(data.loaded / data.total * 100)
+                    component.set('uploadProgress', progress);
                 },
                 onComplete: function(videoId, index) {
-                    let url = 'https://vimeo.com/' + videoId
-
-                    if (index > -1) {
-                        /* The metadata contains all of the uploaded video(s) details see: https://developer.vimeo.com/api/endpoints/videos#/{video_id} */
-                        url = this.metadata[index].link //
-
-                        /* add stringify the json object for displaying in a text area */
-                        const pretty = JSON.stringify(this.metadata[index], null, 2)
-
-                        console.log(pretty) /* echo server data */
-                    }
-
-                    console.log('<strong>Upload Successful</strong>: check uploaded video @ <a href="' + url + '">' + url + '</a>. Open the Console for the response details.')
+                    component.setProperties({
+                        uploadProgress: 0,
+                        isUploading: false,
+                        isProcessing: true
+                    });
+                    uploadUrl = 'https://vimeo.com/' + videoId;
+                    const interval = setInterval(function () {
+                        uploadInst.transcodeStatus(function (status) {
+                            if (status === 'in_progress') return ;
+                            console.log(status);
+                            clearInterval(interval);
+                            component.set('isProcessing', false);
+                            if (status === 'error') component.set('processingError', true);
+                            else if (status === 'complete') {
+                                composer.model.appEvents.trigger("composer:insert-block", '\n' + uploadUrl + '\n');
+                                $("#discourse-modal .close").click();
+                            }
+                        })
+                    }, 10000);
                 }
-            })).upload()
+            });
+
+            uploadInst.upload();
         }
     }
 };
