@@ -216,7 +216,7 @@
         }.bind(this)
 
         xhr.onerror = this.onUploadError_.bind(this)
-        const body = this.videoData
+        var body = this.videoData
         body.upload = {
             approach: 'tus',
             size: this.file.size
@@ -285,7 +285,7 @@
         if (xhr.upload) {
             xhr.upload.addEventListener('progress', this.onProgress)
         }
-        const onload = function(e) {
+        var onload = function(e) {
             var response = JSON.parse(e.target.responseText)
             this.offset = response.offset
             if (this.offset >= this.file.size) {
@@ -320,7 +320,7 @@
      * @private
      */
     me.prototype.complete_ = function(xhr) {
-        const video_id = this.video_url.split('/').pop()
+        var video_id = this.video_url.split('/').pop()
         this.onComplete(video_id);
     }
 
