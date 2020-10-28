@@ -9,6 +9,8 @@ https://vimeo.com/473102487
 
 ## Plugin Setup
 
+- Your Discourse must be updated to include this commit on 28-Oct-2020 as the plugin depends on this code: https://github.com/discourse/discourse/pull/11052
+
 - Follow the directions at [Install a Plugin](https://meta.discourse.org/t/install-a-plugin/19157) using `https://github.com/xomads/discourse-vimeo-upload.git` as the repository URL.
 
 - Create an account and app on Vimeo Developers:
