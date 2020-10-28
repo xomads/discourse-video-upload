@@ -1,6 +1,6 @@
 en:
   site_settings:
     discourse_vimeo_upload_enabled: "Enable DiscourseVimeoUpload plugin"
-    discourse_vimeo_api_client_id: "Vimeo API Client ID"
-    discourse_vimeo_api_client_key: "Vimeo API Client Secret Key"
-    discourse_vimeo_api_client_access_token: "Vimeo API Access Token"
+    vimeo_api_client_id: "Vimeo API Client ID"
+    vimeo_api_client_key: "Vimeo API Client Secret Key"
+    vimeo_api_access_token: "Vimeo API Access Token"

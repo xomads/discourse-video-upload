@@ -10,6 +10,10 @@ register_asset 'stylesheets/common/discourse-vimeo-upload.scss'
 register_asset 'stylesheets/desktop/discourse-vimeo-upload.scss', :desktop
 register_asset 'stylesheets/mobile/discourse-vimeo-upload.scss', :mobile
 
+register_asset "javascripts/lib/vimeo-upload.js"
+
+register_svg_icon "fab-vimeo-v" if respond_to?(:register_svg_icon)
+
 enabled_site_setting :discourse_vimeo_upload_enabled
 
 PLUGIN_NAME ||= 'DiscourseVimeoUpload'
