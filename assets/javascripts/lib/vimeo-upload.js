@@ -224,13 +224,14 @@
         xhr.send(JSON.stringify(body))
     }
 
-    me.prototype.transcodeStatus = function(onComplete) {
+    me.prototype.transcodeStatus = function(onComplete, onError) {
         $.ajax(defaults.api_url + this.video_url, {
             headers: {
                 'Authorization': 'Bearer ' + this.token,
                 'Content-Type': 'application/json',
                 'Accept': this.accept
             },
+            error: onError,
             success: function (data) {
                 onComplete(data.transcode.status);
             }

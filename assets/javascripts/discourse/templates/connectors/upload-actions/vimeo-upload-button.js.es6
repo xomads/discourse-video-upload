@@ -18,7 +18,12 @@ export default {
             if (!validExtensions.includes(file[0].type)) alert("Invalid video, supported types are mp4, mov, wmv, avi, flv");
 
             const component = this;
-            component.set('isUploading', true);
+            component.setProperties({
+                isUploading: true,
+                uploadProgress: 0,
+                isProcessing: false,
+                processingError: false
+            });
             let uploadUrl = '';
 
             const uploadInst = new VimeoUpload({
@@ -27,6 +32,7 @@ export default {
                 token: this.siteSettings.vimeo_api_access_token,
                 view: this.siteSettings.vimeo_default_view_privacy,
                 embed: this.siteSettings.vimeo_default_embed_privacy,
+                description: 'by @' + this.currentUser.username,
                 upgrade_to_1080: true,
                 onError: function(data) {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')
@@ -39,7 +45,7 @@ export default {
                     component.setProperties({
                         uploadProgress: 0,
                         isUploading: false,
-                        isProcessing: true
+                        isProcessing: true,
                     });
                     uploadUrl = 'https://vimeo.com/' + videoId;
                     const interval = setInterval(function () {
@@ -52,6 +58,12 @@ export default {
                                 composer.model.appEvents.trigger("composer:insert-block", '\n' + uploadUrl + '\n');
                                 $("#discourse-modal .close").click();
                             }
+                        }, function (error) {
+                            clearInterval(interval);
+                            component.setProperties({
+                                isProcessing: false,
+                                processingError: true
+                            });
                         })
                     }, 10000);
                 }
