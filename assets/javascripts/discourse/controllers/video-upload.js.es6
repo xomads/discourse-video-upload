@@ -16,6 +16,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
         this._super(...arguments);
         this.vimeoEnabled = this.siteSettings.vimeo_upload_enabled;
         this.youtubeEnabled = this.siteSettings.youtube_upload_enabled;
+        this.vimeoUploadScope = this.siteSettings.vimeo_default_view_privacy;
         const component = this;
         setTimeout(() => $("#video-file").change(() => component.validateVideoFile(component)), 1000);
     },

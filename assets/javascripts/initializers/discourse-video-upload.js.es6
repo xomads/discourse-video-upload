@@ -5,23 +5,26 @@ function initializeDiscourseVideoUpload(api) {
   // https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/lib/plugin-api.js.es6
   const composerController = api.container.lookup("controller:composer");
 
-  api.modifyClass("component:d-editor", {
-    actions: {
-      openVideoUploadModal() {
-        showModal("video-upload");
+  if (composerController.siteSettings.youtube_upload_enabled || composerController.siteSettings.vimeo_upload_enabled) {
+    api.modifyClass("component:d-editor", {
+      actions: {
+        openVideoUploadModal() {
+          showModal("video-upload");
+        }
       }
-    }
-  });
+    });
 
-  api.onToolbarCreate(tb => {
-    tb.addButton({
-      id: 'video-upload',
-      group: 'insertions',
-      icon: 'video',
-      sendAction: () => tb.context.send('openVideoUploadModal'),
-      title: 'video_upload.modal_title'
-    })
-  });
+    api.onToolbarCreate(tb => {
+      tb.addButton({
+        id: 'video-upload',
+        group: 'insertions',
+        icon: 'video',
+        sendAction: () => tb.context.send('openVideoUploadModal'),
+        title: 'video_upload.modal_title'
+      })
+    });
+  }
+
 }
 
 export default {

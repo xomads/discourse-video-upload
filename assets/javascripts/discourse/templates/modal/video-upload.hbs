@@ -6,12 +6,15 @@
         }}
     <div class="video-details">
         {{input type="file" id="video-file" accept="video/*" }}
-        <label for=video-scope">Privacy level</label>
-        <select id="video-scope">
-            <option value="unlisted">Unlisted</option>
-            <option value="public">Public</option>
-            <option value="private">Private</option>
-        </select>
+        {{#if youtubeEnabled}}
+            <label for=video-scope">Privacy level</label>
+            {{#if vimeoEnabled}}<small>Only applies for YouTube uploads. Uploads to Vimeo will be visible to <b>{{vimeoUploadScope}}</b> by default.</small>{{/if}}
+            <select id="video-scope">
+                <option value="unlisted">Unlisted</option>
+                <option value="public">Public</option>
+                <option value="private">Private</option>
+            </select>
+        {{/if}}
         <label for=video-title">Title</label> {{input type="text" id="video-title" placeholder="Video Title" }}
         <label for=video-scope">Description</label> {{input type="text" id="video-description" placeholder="Video Description" }}
     </div>
