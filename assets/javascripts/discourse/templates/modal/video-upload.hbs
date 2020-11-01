@@ -1,0 +1,22 @@
+{{#d-modal-body
+        title="video_upload.modal_title"
+        class="video-upload-modal"
+        }}
+    <input type="file" id="video-file" accept="video/*" />
+
+    <div class="video-upload-status">
+        {{#if isUploading}}
+            Uploading {{uploadProgress}}%
+        {{/if}}
+        {{#if isProcessing}}
+            Transcoding video <div class="spinner"></div>
+        {{/if}}
+        {{#if processingError}}
+            <span style="color: red">Error transcoding video.</span>
+        {{/if}}
+    </div>
+
+    <div class="modal-footer">
+        {{d-button action=(action "vimeoUpload") id="vimeo-upload-btn" class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
+    </div>
+{{/d-modal-body}}
