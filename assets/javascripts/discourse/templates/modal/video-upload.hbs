@@ -4,7 +4,17 @@
         title="video_upload.modal_title"
         class="video-upload-modal"
         }}
-    <input type="file" id="video-file" accept="video/*" />
+    <div class="video-details">
+        {{input type="file" id="video-file" accept="video/*" }}
+        <label for=video-scope">Privacy level</label>
+        <select id="video-scope">
+            <option value="unlisted">Unlisted</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        <label for=video-title">Title</label> {{input type="text" id="video-title" placeholder="Video Title" }}
+        <label for=video-scope">Description</label> {{input type="text" id="video-description" placeholder="Video Description" }}
+    </div>
 
     <div class="video-upload-status">
         {{#if isAuthing}}
@@ -22,7 +32,11 @@
     </div>
 
     <div class="modal-footer">
-        {{d-button action=(action "vimeoUpload") id="vimeo-upload-btn" class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
-        {{d-button action=(action "youtubeUpload") id="youtube-upload-btn" class="btn-primary" icon="fab-youtube" label="upload-youtube"}}
+        {{#if vimeoEnabled}}
+            {{d-button action=(action "vimeoUpload") id="vimeo-upload-btn" class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
+        {{/if}}
+        {{#if youtubeEnabled}}
+            {{d-button action=(action "youtubeUpload") id="youtube-upload-btn" class="btn-primary" icon="fab-youtube" label="upload-youtube"}}
+        {{/if}}
     </div>
 {{/d-modal-body}}

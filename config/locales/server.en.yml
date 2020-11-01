@@ -6,3 +6,5 @@ en:
     vimeo_api_access_token: "Vimeo API Access Token"
     youtube_api_client_id: "Youtube API Client ID"
     youtube_default_view_privacy: "Default privacy for videos uploaded to YouTube"
+    vimeo_upload_enabled: "Enable upload to Vimeo"
+    youtube_upload_enabled: "Enable upload to YouTube"

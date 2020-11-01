@@ -8,17 +8,34 @@ export default Ember.Controller.extend(ModalFunctionality, {
     uploadProgress: 0,
     isUploading: false,
     isProcessing: false,
+    defaultPrivacy: 'unlisted',
+    vimeoEnabled: false,
+    youtubeEnabled: false,
 
-    init(a, component) {
+    init() {
         this._super(...arguments);
+        this.vimeoEnabled = this.siteSettings.vimeo_upload_enabled;
+        this.youtubeEnabled = this.siteSettings.youtube_upload_enabled;
+        const component = this;
+        setTimeout(() => $("#video-file").change(() => component.validateVideoFile(component)), 1000);
+    },
+    validateVideoFile(component) {
+        const file = $("#video-file").prop('files');
+        if (!file || file.length < 1) return false;
+        if (!file[0].type.startsWith('video/')) {
+            alert("Invalid video file");
+            return false;
+        }
+
+        $("#video-title").val(file[0].name);
+        $("#video-scope").val("unlisted");
+        $("#video-description").val('by @' + component.currentUser.username)
+
+        return true;
     },
     actions: {
         vimeoUpload() {
             const composer = getOwner(this).lookup("controller:composer");
-            const file = $("#video-file").prop('files');
-            if (!file || file.length < 1) return;
-            if (!validExtensions.includes(file[0].type)) alert("Invalid video, supported types are mp4, mov, wmv, avi, flv");
-
             const component = this;
             component.setProperties({
                 isUploading: true,
@@ -32,12 +49,12 @@ export default Ember.Controller.extend(ModalFunctionality, {
             let uploadUrl = '';
 
             const uploadInst = new VimeoUpload({
-                name: file[0].name,
                 file: file[0],
                 token: this.siteSettings.vimeo_api_access_token,
-                view: this.siteSettings.vimeo_default_view_privacy,
+                name: $("#video-title").val(),
+                view: $("#video-scope").val(),
+                description: $("#video-description").val(),
                 embed: this.siteSettings.vimeo_default_embed_privacy,
-                description: 'by @' + this.currentUser.username,
                 upgrade_to_1080: true,
                 onError: function(data) {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')
@@ -78,10 +95,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
             uploadInst.upload();
         },
         youtubeUpload() {
-            const file = $("#video-file").prop('files');
-            if (!file || file.length < 1) return;
-            if (!validExtensions.includes(file[0].type)) alert("Invalid video, supported types are mp4, mov, wmv, avi, flv");
-
             const component = this;
             component.setProperties({
                 isAuthing: true,
@@ -91,29 +104,33 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 processingError: false
             });
 
+            const checkScopeAndUpload = function () {
+                const authResponse = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse();
+                if (authResponse.scope.indexOf(ytScopes[0]) >= 0 && authResponse.scope.indexOf(ytScopes[1]) >= 0) {
+                    component.sendFileToYoutube()
+                    return true;
+                }
+                return false;
+            }
+
+            const ytScopes = ['https://www.googleapis.com/auth/youtube', 'https://www.googleapis.com/auth/youtube.readonly'];
             gapi.load('client:auth2', function () {
                 gapi.client.init({
                     clientId: component.siteSettings.youtube_api_client_id,
-                    scope: 'https://www.googleapis.com/auth/youtube.upload https://www.googleapis.com/auth/youtube.readonly'
+                    scope: ytScopes.join(' ')
                 }).then(function () {
-                    let accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-                    if (!accessToken) {
-                        gapi.auth2.getAuthInstance().signIn().then(function (res) {
-                            accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
-                            component.sendFileToYoutube(accessToken);
-                        });
-                    } else {
-                        component.sendFileToYoutube(accessToken);
-                    }
+                    if (!(gapi.auth2.getAuthInstance().isSignedIn.get() && checkScopeAndUpload()))
+                        gapi.auth2.getAuthInstance().signIn().then(checkScopeAndUpload)
                 })
             });
         }
     },
-    sendFileToYoutube(accessToken) {
+    sendFileToYoutube() {
+        const accessToken = gapi.auth2.getAuthInstance().currentUser.get().getAuthResponse().access_token;
         const component = this;
         const file = $("#video-file").prop('files');
-
         $("#youtube-upload-btn").attr('disabled', 'disabled');
+
         component.setProperties({
             isUploading: true,
             isAuthing: false
@@ -121,11 +138,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
         const metadata = {
             snippet: {
-                title: file[0].name,
-                description:  'by @' + component.currentUser.username
+                title: $("#video-title").val(),
+                description: $("#video-description").val()
             },
             status: {
-                privacyStatus: component.siteSettings.youtube_default_view_privacy
+                privacyStatus: $("#video-scope").val()
             }
         };
         const uploader = new MediaUploader({

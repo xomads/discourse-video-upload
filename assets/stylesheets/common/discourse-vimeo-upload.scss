@@ -6,6 +6,10 @@
 }
 
 .video-upload-modal {
+  .video-details input {
+    display: block;
+    margin: 10px 0;
+  }
   .video-upload-status {
     margin: 15px 0;
 

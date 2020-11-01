@@ -3,7 +3,7 @@ plugins:
     default: true
     client: true
   vimeo_upload_enabled:
-    default: true
+    default: false
     client: true
   vimeo_api_access_token:
     default: api_access_token
@@ -15,7 +15,7 @@ plugins:
     default: public
     client: true
   youtube_upload_enabled:
-    default: true
+    default: false
     client: true
   youtube_api_client_id:
     default: api_client_id
