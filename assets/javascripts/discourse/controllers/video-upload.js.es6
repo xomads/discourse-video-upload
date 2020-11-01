@@ -1,7 +1,6 @@
 import { getOwner } from "discourse-common/lib/get-owner";
 import ModalFunctionality from "discourse/mixins/modal-functionality";
 
-const validExtensions = ["video/mp4", "video/mov", "video/wmv", "video/avi", "video/flv"];
 const STATUS_POLLING_INTERVAL_MILLIS = 10000;
 
 export default Ember.Controller.extend(ModalFunctionality, {
@@ -11,14 +10,24 @@ export default Ember.Controller.extend(ModalFunctionality, {
     defaultPrivacy: 'unlisted',
     vimeoEnabled: false,
     youtubeEnabled: false,
+    uploadError: null,
 
     init() {
         this._super(...arguments);
         this.vimeoEnabled = this.siteSettings.vimeo_upload_enabled;
         this.youtubeEnabled = this.siteSettings.youtube_upload_enabled;
         this.vimeoUploadScope = this.siteSettings.vimeo_default_view_privacy;
+    },
+    onShow() {
         const component = this;
         setTimeout(() => $("#video-file").change(() => component.validateVideoFile(component)), 1000);
+        component.setProperties({
+            isProcessing: false,
+            processingError: false,
+            uploadError: null,
+            isUploading: false,
+            isAuthing: false
+        });
     },
     validateVideoFile(component) {
         const file = $("#video-file").prop('files');
@@ -46,7 +55,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 isUploading: true,
                 uploadProgress: 0,
                 isProcessing: false,
-                processingError: false
+                processingError: false,
+                uploadError: null
             });
 
             $("#vimeo-upload-btn").attr('disabled', 'disabled');
@@ -63,6 +73,11 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 upgrade_to_1080: true,
                 onError: function(data) {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')
+                    component.setProperties({
+                        uploadProgress: 0,
+                        isUploading: false,
+                        uploadError: JSON.parse(data).error
+                    });
                 },
                 onProgress: data => component.updateProgress(data, component),
                 onComplete: function(videoId, index) {
@@ -85,7 +100,8 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 isUploading: false,
                 uploadProgress: 0,
                 isProcessing: false,
-                processingError: false
+                processingError: false,
+                uploadError: null
             });
 
             const checkScopeAndUpload = function () {
@@ -147,6 +163,10 @@ export default Ember.Controller.extend(ModalFunctionality, {
                     message = errorResponse.error.message;
                 } finally {
                     console.error(message);
+                    component.setProperties({
+                        isUploading: false,
+                        uploadError: message
+                    });
                 }
             }.bind(this),
             onProgress: function(data) { component.updateProgress(data, component) }.bind(this),

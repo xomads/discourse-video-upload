@@ -32,6 +32,9 @@
         {{#if processingError}}
             <span style="color: red">Error transcoding video.</span>
         {{/if}}
+        {{#if uploadError}}
+            <span style="color: red">Error uploading video: {{{uploadError}}}</span>
+        {{/if}}
     </div>
 
     <div class="modal-footer">
