@@ -30,7 +30,6 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
         $("#video-title").val(file[0].name);
         $("#video-scope").val("unlisted");
-        $("#video-description").val('by @' + component.currentUser.username)
 
         return true;
     },
@@ -58,7 +57,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 file: file[0],
                 token: this.siteSettings.vimeo_api_access_token,
                 name: $("#video-title").val(),
-                description: $("#video-description").val(),
+                description: $("#video-description").val() + '\nby @' + component.currentUser.username,
                 view: this.siteSettings.vimeo_default_view_privacy,
                 embed: this.siteSettings.vimeo_default_embed_privacy,
                 upgrade_to_1080: true,
