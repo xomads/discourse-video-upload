@@ -1,7 +1,7 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
 import showModal from "discourse/lib/show-modal";
 
-function initializeDiscourseVimeoUpload(api) {
+function initializeDiscourseVideoUpload(api) {
   // https://github.com/discourse/discourse/blob/master/app/assets/javascripts/discourse/lib/plugin-api.js.es6
   const composerController = api.container.lookup("controller:composer");
 
@@ -15,7 +15,7 @@ function initializeDiscourseVimeoUpload(api) {
 
   api.onToolbarCreate(tb => {
     tb.addButton({
-      id: 'vimeo-upload',
+      id: 'video-upload',
       group: 'insertions',
       icon: 'video',
       sendAction: () => tb.context.send('openVideoUploadModal'),
@@ -25,9 +25,9 @@ function initializeDiscourseVimeoUpload(api) {
 }
 
 export default {
-  name: "discourse-vimeo-upload",
+  name: "discourse-video-upload",
 
   initialize() {
-    withPluginApi("0.8.31", initializeDiscourseVimeoUpload);
+    withPluginApi("0.8.31", initializeDiscourseVideoUpload);
   }
 };

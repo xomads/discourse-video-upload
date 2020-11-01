@@ -1,6 +1,6 @@
 en:
   site_settings:
-    discourse_vimeo_upload_enabled: "Enable DiscourseVimeoUpload plugin"
+    discourse_video_upload_enabled: "Enable DiscourseVideoUpload plugin"
     vimeo_default_view_privacy: "Check privacy.view options on this page: https://developer.vimeo.com/api/reference/videos#edit_video"
     vimeo_default_embed_privacy: "Check privacy.embed options on this page: https://developer.vimeo.com/api/reference/videos#edit_video"
     vimeo_api_access_token: "Vimeo API Access Token"

@@ -1,7 +1,7 @@
-require_dependency "discourse_vimeo_upload_constraint"
+require_dependency "discourse_video_upload_constraint"
 
-DiscourseVimeoUpload::Engine.routes.draw do
-  get "/" => "discourse_vimeo_upload#index", constraints: DiscourseVimeoUploadConstraint.new
-  get "/actions" => "actions#index", constraints: DiscourseVimeoUploadConstraint.new
-  get "/actions/:id" => "actions#show", constraints: DiscourseVimeoUploadConstraint.new
+DiscourseVideoUpload::Engine.routes.draw do
+  get "/" => "discourse_video_upload#index", constraints: DiscourseVideoUploadConstraint.new
+  get "/actions" => "actions#index", constraints: DiscourseVideoUploadConstraint.new
+  get "/actions/:id" => "actions#show", constraints: DiscourseVideoUploadConstraint.new
 end

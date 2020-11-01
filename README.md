@@ -1,6 +1,6 @@
-# Discourse Vimeo Upload Plugin
+# Discourse Video Upload Plugin
 
-Allows users on a Discourse forum to upload videos to a single Vimeo account.
+Allows users on a Discourse forum to upload videos to YouTube and Vimeo.
 Once you setup the plugin with the steps below, <b>all community users will be able to upload videos to *your Vimeo account*.</b>
 You are responsible for limits and usage of your Vimeo account. 
 
@@ -11,7 +11,7 @@ https://vimeo.com/473102487
 
 - Your Discourse must be updated to include this commit on 28-Oct-2020 as the plugin depends on this code: https://github.com/discourse/discourse/pull/11052
 
-- Follow the directions at [Install a Plugin](https://meta.discourse.org/t/install-a-plugin/19157) using `https://github.com/xomads/discourse-vimeo-upload.git` as the repository URL.
+- Follow the directions at [Install a Plugin](https://meta.discourse.org/t/install-a-plugin/19157) using `https://github.com/xomads/discourse-video-upload.git` as the repository URL.
 
 - Create an account and app on Vimeo Developers:
 https://developer.vimeo.com/apps/new
