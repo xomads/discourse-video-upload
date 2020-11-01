@@ -16,10 +16,10 @@ function initializeDiscourseVimeoUpload(api) {
   api.onToolbarCreate(tb => {
     tb.addButton({
       id: 'vimeo-upload',
-      group: 'extras',
-      icon: 'fab-vimeo-v',
+      group: 'insertions',
+      icon: 'video',
       sendAction: () => tb.context.send('openVideoUploadModal'),
-      title: 'upload-vimeo'
+      title: 'video_upload.modal_title'
     })
   });
 }

@@ -4,3 +4,5 @@ en:
     vimeo_default_view_privacy: "Check privacy.view options on this page: https://developer.vimeo.com/api/reference/videos#edit_video"
     vimeo_default_embed_privacy: "Check privacy.embed options on this page: https://developer.vimeo.com/api/reference/videos#edit_video"
     vimeo_api_access_token: "Vimeo API Access Token"
+    youtube_api_client_id: "Youtube API Client ID"
+    youtube_default_view_privacy: "Default privacy for videos uploaded to YouTube"

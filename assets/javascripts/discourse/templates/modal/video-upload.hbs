@@ -1,3 +1,5 @@
+<script async defer src="https://apis.google.com/js/api.js" id="gapiScript"></script>
+
 {{#d-modal-body
         title="video_upload.modal_title"
         class="video-upload-modal"
@@ -5,6 +7,9 @@
     <input type="file" id="video-file" accept="video/*" />
 
     <div class="video-upload-status">
+        {{#if isAuthing}}
+            Authenticating...
+        {{/if}}
         {{#if isUploading}}
             Uploading {{uploadProgress}}%
         {{/if}}
@@ -18,5 +23,6 @@
 
     <div class="modal-footer">
         {{d-button action=(action "vimeoUpload") id="vimeo-upload-btn" class="btn-primary" icon="fab-vimeo-v" label="upload-vimeo"}}
+        {{d-button action=(action "youtubeUpload") id="youtube-upload-btn" class="btn-primary" icon="fab-youtube" label="upload-youtube"}}
     </div>
 {{/d-modal-body}}

@@ -1,5 +1,6 @@
 en:
   js:
     upload-vimeo: "Upload to Vimeo"
+    upload-youtube: "Upload to YouTube"
     video_upload:
       modal_title: "Upload a video"
