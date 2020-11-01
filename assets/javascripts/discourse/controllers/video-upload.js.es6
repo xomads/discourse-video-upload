@@ -33,8 +33,13 @@ export default Ember.Controller.extend(ModalFunctionality, {
 
         return true;
     },
+    updateProgress(data, component) {
+        const progress = Math.floor(data.loaded / data.total * 100)
+        component.set('uploadProgress', progress);
+    },
     actions: {
         vimeoUpload() {
+            const file = $("#video-file").prop('files');
             const composer = getOwner(this).lookup("controller:composer");
             const component = this;
             component.setProperties({
@@ -52,17 +57,14 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 file: file[0],
                 token: this.siteSettings.vimeo_api_access_token,
                 name: $("#video-title").val(),
-                view: $("#video-scope").val(),
                 description: $("#video-description").val(),
+                view: this.siteSettings.vimeo_default_view_privacy,
                 embed: this.siteSettings.vimeo_default_embed_privacy,
                 upgrade_to_1080: true,
                 onError: function(data) {
                     console.error('<strong>Error</strong>: ' + JSON.parse(data).error, 'danger')
                 },
-                onProgress: function(data) {
-                    const progress = Math.floor(data.loaded / data.total * 100)
-                    component.set('uploadProgress', progress);
-                },
+                onProgress: data => component.updateProgress(data, component),
                 onComplete: function(videoId, index) {
                     component.setProperties({
                         uploadProgress: 0,
@@ -70,25 +72,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                         isProcessing: true,
                     });
                     uploadUrl = 'https://vimeo.com/' + videoId;
-                    const interval = setInterval(function () {
-                        uploadInst.transcodeStatus(function (status) {
-                            if (status === 'in_progress') return ;
-                            clearInterval(interval);
-                            component.set('isProcessing', false);
-                            $("#vimeo-upload-btn").removeAttr('disabled');
-                            if (status === 'error') component.set('processingError', true);
-                            else if (status === 'complete') {
-                                composer.model.appEvents.trigger("composer:insert-block", '\n' + uploadUrl + '\n');
-                                component.send('closeModal');
-                            }
-                        }, function (error) {
-                            clearInterval(interval);
-                            component.setProperties({
-                                isProcessing: false,
-                                processingError: true
-                            });
-                        })
-                    }, STATUS_POLLING_INTERVAL_MILLIS);
+                    component.vimeoUploadStatus(uploadInst, uploadUrl, composer, component);
                 }
             });
 
@@ -165,10 +149,7 @@ export default Ember.Controller.extend(ModalFunctionality, {
                     console.error(message);
                 }
             }.bind(this),
-            onProgress: function(data) {
-                const progress = Math.floor(data.loaded / data.total * 100)
-                component.set('uploadProgress', progress);
-            }.bind(this),
+            onProgress: function(data) { component.updateProgress(data, component) }.bind(this),
             onComplete: function(data) {
                 const uploadResponse = JSON.parse(data);
                 component.ytVideoId = uploadResponse.id;
@@ -218,5 +199,26 @@ export default Ember.Controller.extend(ModalFunctionality, {
                 }
             }.bind(this)
         });
+    },
+    vimeoUploadStatus(uploadInst, uploadUrl, composer, component) {
+        const interval = setInterval(function () {
+            uploadInst.transcodeStatus(function (status) {
+                if (status === 'in_progress') return ;
+                clearInterval(interval);
+                component.set('isProcessing', false);
+                $("#vimeo-upload-btn").removeAttr('disabled');
+                if (status === 'error') component.set('processingError', true);
+                else if (status === 'complete') {
+                    composer.model.appEvents.trigger("composer:insert-block", '\n' + uploadUrl + '\n');
+                    component.send('closeModal');
+                }
+            }, function (error) {
+                clearInterval(interval);
+                component.setProperties({
+                    isProcessing: false,
+                    processingError: true
+                });
+            })
+        }, STATUS_POLLING_INTERVAL_MILLIS);
     }
 });
