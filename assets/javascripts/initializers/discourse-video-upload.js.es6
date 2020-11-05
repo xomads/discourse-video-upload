@@ -20,7 +20,7 @@ function initializeDiscourseVideoUpload(api) {
         group: 'insertions',
         icon: 'video',
         sendAction: () => tb.context.send('openVideoUploadModal'),
-        title: 'video_upload.modal_title'
+        title: 'video_upload'
       })
     });
   }
