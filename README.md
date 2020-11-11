@@ -3,7 +3,7 @@
 Allows users on a Discourse forum to upload videos to YouTube and Vimeo.
 
 You can watch a demo of the plugin here:
-https://vimeo.com/473102487
+https://vimeo.com/474476485
 
 ## Plugin Setup
 
